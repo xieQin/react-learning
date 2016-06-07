@@ -1,4 +1,22 @@
 [
-  {"id": "1", "author": "Pete Hunt", "text": "This is one comment"},
-  {"id": "2", "author": "Jordan Walke", "text": "This is *another* comment"}
+    {
+        "id": "1",
+        "author": "Pete Hunt",
+        "text": "This is one comment"
+    },
+    {
+        "id": "2",
+        "author": "Jordan Walke",
+        "text": "This is *another* comment"
+    },
+    {
+        "id": 1465270871326,
+        "author": "cherish",
+        "text": "cherish"
+    },
+    {
+        "id": 1465270920912,
+        "author": "cherish",
+        "text": "cherish"
+    }
 ]

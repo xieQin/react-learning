@@ -20,10 +20,16 @@ var CommentBox = React.createClass({
     setInterval(this.loadCommentsFromServer, this.props.pollInterval)
   },
   handleCommentSubmit: function(comment) {
+    var comments = this.state.data
+    comment.id = Date.now()
+    var newComments = comments.concat([comment])
+    this.setState({data: newComments})
     $.ajax({
       url: this.props.url,
+      type: 'post',
       dataType: 'json',
       cache: false,
+      data: comment,
       success: function(data) {
         this.setState(data)
       }.bind(this),
@@ -122,7 +128,7 @@ var Comment = React.createClass({
         <h2 className="commentAuthor">
           {this.props.author}
         </h2>
-        <span dangerousSetInnerHTML={this.rawMarkup()} />
+        <span dangerouslySetInnerHTML={this.rawMarkup()} />
       </div>
     )
   }
