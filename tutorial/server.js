@@ -5,6 +5,7 @@ var bodyParser = require('body-parser')
 var app = express()
 
 var COMMENTS_FILE = path.join(__dirname, 'comments.json');
+var SEARCH_FILE = path.join(__dirname, 'search.json');
 
 app.set('port', (process.env.PORT || 3000));
 
@@ -28,6 +29,16 @@ app.get('/api/comments', function(req, res) {
     res.json(JSON.parse(data));
   });
 });
+
+app.get('/api/search', function(req, res) {
+  fs.readFile(SEARCH_FILE, function(err, data) {
+    if(err) {
+      console.log(err);
+      process.exit(1);
+    }
+    res.json(JSON.parse(data))
+  })
+})
 
 app.post('/api/comments', function(req, res) {
   fs.readFile(COMMENTS_FILE, function(err, data) {
