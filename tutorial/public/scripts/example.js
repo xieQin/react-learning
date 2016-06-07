@@ -29,7 +29,7 @@ var CommentBox = React.createClass({
       }.bind(this),
       error: function(xhr, status, err) {
         console.log(this.props.url, status, err.toString())
-      }
+      }.bind(this)
     })
   },
   render: function() {
