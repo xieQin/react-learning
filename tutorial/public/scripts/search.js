@@ -1,5 +1,5 @@
 var FilterableProductTable = React.createClass({
-  getInitialStete: function() {
+  getInitialState: function() {
     return {
       filter: '',
       isStock: false
@@ -8,21 +8,43 @@ var FilterableProductTable = React.createClass({
   render: function() {
     return (
       <div className="container">
-        <SearchBar />
-        <ProductTable products={this.props.data} />
+        <SearchBar
+          filter={this.state.filter}
+          isStock={this.state.isStock}
+        />
+        <ProductTable
+          products={this.props.data}
+          filter={this.state.filter}
+          isStock={this.state.isStock}
+        />
       </div>
     )
   }
 })
 
 var SearchBar = React.createClass({
+  handleFilterChange: function(e) {
+    this.setState({filter: e.target.value})
+  },
+  handleIsStockChange: function(e) {
+    this.setState({isStock: e.target.value})
+  },
   render: function() {
     return (
-      <div className="search">
-        <input type="text" placeholder="Search..."/>
-        <input type="checkbox"/>
-        <label>Only show products in stock</label>
-      </div>
+      <form>
+        <input type="text"
+          placeholder="Search..."
+          value={this.props.filter}
+          onChange={this.handleFilterChange}
+        />
+        <div className="check">
+          <input type="checkbox"
+            checked={this.props.isStock}
+            onChange={this.handleIsStockChange}
+          />
+          Only show products in stock
+        </div>
+      </form>
     )
   }
 })
@@ -31,11 +53,15 @@ var ProductTable = React.createClass({
   render: function() {
     var rows = []
     var lastCategory = null
+    var isStock = this.props.isStock
     this.props.products.map(function(product) {
+      if(isStock && !product.stocked) {
+        return
+      }
       if(product.category !== lastCategory) {
         rows.push(<ProductCategoryRow key={product.category} category={product.category}></ProductCategoryRow>)
       }
-      rows.push(<ProductRow key={product.name} name={product.name} price={product.price}></ProductRow>)
+      rows.push(<ProductRow key={product.name} product={product}></ProductRow>)
       lastCategory = product.category
     })
     return (
@@ -66,10 +92,15 @@ var ProductCategoryRow = React.createClass({
 
 var ProductRow = React.createClass({
   render: function() {
+    var name = this.props.product.stocked ?
+             this.props.product.name :
+             <span style={{color: 'red'}}>
+              {this.props.product.name}
+             </span>
     return (
       <tr>
-        <td>{this.props.name}</td>
-        <td>{this.props.price}</td>
+        <td>{name}</td>
+        <td>{this.props.product.price}</td>
       </tr>
     )
   }
@@ -83,11 +114,6 @@ var data = [
   {"id": 5, "category": "Electronics", "price": "$399.99", "stocked": false, "name": "iPhone 5"},
   {"id": 6, "category": "Electronics", "price": "$199.99", "stocked": true, "name": "Nexus 7"}
 ]
-
-// ReactDOM.render(
-//   <FilterableProductTable url="/api/search"/>,
-//   document.getElementById('content')
-// )
 
 ReactDOM.render(
   <FilterableProductTable url="/api/search" data={data}/>,
