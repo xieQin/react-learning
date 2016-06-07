@@ -19,8 +19,18 @@ var CommentBox = React.createClass({
     this.loadCommentsFromServer();
     setInterval(this.loadCommentsFromServer, this.props.pollInterval)
   },
-  handleCommentSubmit: function() {
-    
+  handleCommentSubmit: function(comment) {
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        this.setState(data)
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.log(this.props.url, status, err.toString())
+      }
+    })
   },
   render: function() {
     return (
@@ -67,6 +77,7 @@ var CommentForm = React.createClass({
     if(!text || !author) {
       return
     }
+    this.props.onCommentSubmit({author: author, text: text})
     this.setState({author: '', text: ''})
   },
   render: function() {
@@ -118,6 +129,6 @@ var Comment = React.createClass({
 })
 
 ReactDOM.render(
-  <CommentBox url="./api/comments.json" pollInterval={2000}/>,
+  <CommentBox url="/api/comments" pollInterval={2000}/>,
   document.getElementById('content')
 )
