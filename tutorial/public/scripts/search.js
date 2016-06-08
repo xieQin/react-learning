@@ -5,12 +5,16 @@ var FilterableProductTable = React.createClass({
       isStock: false
     }
   },
+  handleFilter: function(filterTextInput, isStockCheck) {
+    this.setState({filter: filterTextInput, isStock: isStockCheck})
+  },
   render: function() {
     return (
       <div className="container">
         <SearchBar
           filter={this.state.filter}
           isStock={this.state.isStock}
+          onFilter={this.handleFilter}
         />
         <ProductTable
           products={this.props.data}
@@ -23,11 +27,8 @@ var FilterableProductTable = React.createClass({
 })
 
 var SearchBar = React.createClass({
-  handleFilterChange: function(e) {
-    this.setState({filter: e.target.value})
-  },
-  handleIsStockChange: function(e) {
-    this.setState({isStock: e.target.value})
+  handleChange: function(e) {
+    this.props.onFilter(this.refs.filterTextInput.value, this.refs.isStockCheck.checked)
   },
   render: function() {
     return (
@@ -35,12 +36,15 @@ var SearchBar = React.createClass({
         <input type="text"
           placeholder="Search..."
           value={this.props.filter}
-          onChange={this.handleFilterChange}
+          ref="filterTextInput"
+          onChange={this.handleChange}
         />
         <div className="check">
-          <input type="checkbox"
+          <input
+            type="checkbox"
             checked={this.props.isStock}
-            onChange={this.handleIsStockChange}
+            ref="isStockCheck"
+            onChange={this.handleChange}
           />
           Only show products in stock
         </div>
@@ -54,8 +58,12 @@ var ProductTable = React.createClass({
     var rows = []
     var lastCategory = null
     var isStock = this.props.isStock
+    var filter = this.props.filter
     this.props.products.map(function(product) {
       if(isStock && !product.stocked) {
+        return
+      }
+      if(filter != '' && product.name.toLowerCase().indexOf(filter.toLowerCase()) == -1) {
         return
       }
       if(product.category !== lastCategory) {
