@@ -1,6 +1,4 @@
-require('react-addons-pure-render-mixin')
-
-var ReactCssTransitionGroup = React.addons.ReactCssTransitionGroup
+var ReactCSSTransitionGroup = React.addons.ReactCSSTransitionGroup
 
 var TodoList = React.createClass({
   getInitialState: function() {
@@ -10,7 +8,7 @@ var TodoList = React.createClass({
   },
 
   handleAdd: function() {
-    var newItems = this.state.items.concat([promt('Enter new item')])
+    var newItems = this.state.items.concat([prompt('Enter new item')])
     this.setState({items: newItems})
   },
 
@@ -27,13 +25,13 @@ var TodoList = React.createClass({
           {item}
         </div>
       )
-    }).bind(this)
+    }.bind(this))
     return (
       <div>
         <button onClick={this.handleAdd}>Add Item</button>
-        <ReactCssTransitionGroup transitionName="example">
+        <ReactCSSTransitionGroup transitionName="example">
           {items}
-        </ReactCssTransitionGroup>
+        </ReactCSSTransitionGroup>
       </div>
     )
   }
