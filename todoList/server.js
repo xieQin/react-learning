@@ -15,7 +15,8 @@ app.use(webpackDevMiddleware(compiler, {
   stats: {
     colors: true,
     chunks: false
-  }
+  },
+  hot: true
 }))
 
 app.use(webpackHotMiddleware(compiler))
